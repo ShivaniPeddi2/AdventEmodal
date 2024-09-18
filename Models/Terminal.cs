@@ -1,6 +1,5 @@
-// Models/Terminal.cs
-
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 public class Terminal
@@ -12,9 +11,21 @@ public class Terminal
     [StringLength(255)]
     public string Address { get; set; }
     
-    public decimal? Latitude { get; set; }
-    public decimal? Longitude { get; set; }
+    [StringLength(100)]
+    public string State { get; set; }
+    
+    [StringLength(20)]
+    public string Pincode { get; set; }
+    
+    [StringLength(100)]
+    public string Country { get; set; }
+    
+    [StringLength(50)]
+    public string GateNo { get; set; }
     
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-    public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime RegistrationDate { get; set; } = DateTime.UtcNow;
+
+    // Add this property
+    public ICollection<Appointment>? Appointments { get; set; }
 }

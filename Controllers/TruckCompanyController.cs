@@ -1,7 +1,5 @@
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
 using System.Threading.Tasks;
 
 [Route("api/[controller]")]
@@ -15,26 +13,13 @@ public class TruckCompanyController : ControllerBase
         _context = context;
     }
 
-    [Authorize]
     [HttpGet]
     public async Task<IActionResult> GetTruckCompanies()
     {
-        if (User.IsInRole("Admin"))
-        {
-            // Admins can view all truck companies
-            var companies = await _context.TruckCompanies.ToListAsync();
-            return Ok(companies);
-        }
-        else
-        {
-            // Users may not have access to view truck companies unless specific conditions are met
-            // For example, you can return a limited list or deny access entirely
-            // Here, as an example, users are denied access
-            return Forbid();
-        }
+        var companies = await _context.TruckCompanies.ToListAsync();
+        return Ok(companies);
     }
 
-    [Authorize]
     [HttpGet("{id}")]
     public async Task<IActionResult> GetTruckCompany(int id)
     {
@@ -43,19 +28,9 @@ public class TruckCompanyController : ControllerBase
         {
             return NotFound();
         }
-
-        if (User.IsInRole("Admin"))
-        {
-            return Ok(company);
-        }
-        else
-        {
-            // Regular users cannot access specific truck company details
-            return Forbid();
-        }
+        return Ok(company);
     }
 
-    [Authorize(Roles = "Admin")]
     [HttpPost]
     public async Task<IActionResult> CreateTruckCompany([FromBody] TruckCompany company)
     {
@@ -70,7 +45,6 @@ public class TruckCompanyController : ControllerBase
         return CreatedAtAction(nameof(GetTruckCompany), new { id = company.CompanyId }, company);
     }
 
-    [Authorize(Roles = "Admin")]
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateTruckCompany(int id, [FromBody] TruckCompany company)
     {
@@ -88,6 +62,9 @@ public class TruckCompanyController : ControllerBase
         existingCompany.Name = company.Name;
         existingCompany.Address = company.Address;
         existingCompany.ContactNumber = company.ContactNumber;
+        existingCompany.RegisteredDate = company.RegisteredDate;
+        existingCompany.Email = company.Email;
+        existingCompany.Website = company.Website;
 
         _context.Entry(existingCompany).State = EntityState.Modified;
         await _context.SaveChangesAsync();
@@ -95,7 +72,6 @@ public class TruckCompanyController : ControllerBase
         return NoContent();
     }
 
-    [Authorize(Roles = "Admin")]
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteTruckCompany(int id)
     {

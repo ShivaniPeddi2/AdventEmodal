@@ -1,6 +1,8 @@
-// Models/Driver.cs
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
+
 public class Driver
 {
     [Key]
@@ -18,8 +20,12 @@ public class Driver
     public string PhoneNumber { get; set; }
     
     public int? TruckCompanyId { get; set; }
-    public TruckCompany TruckCompany { get; set; }
+    [JsonIgnore]
+    public TruckCompany? TruckCompany { get; set; }
     
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-    public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+
+    // Add this property
+    [JsonIgnore]
+    public ICollection<Appointment>? Appointments { get; set; }
 }

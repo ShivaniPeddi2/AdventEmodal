@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
 using System.Threading.Tasks;
 
 [Route("api/[controller]")]
@@ -15,11 +14,21 @@ public class AppointmentController : ControllerBase
         _context = context;
     }
 
-    [Authorize(Roles = "Admin")]
     [HttpGet]
     public async Task<IActionResult> GetAppointments()
+{
+    try
     {
-        // Admin can retrieve all appointments
+        var query = _context.Appointments
+            .Include(a => a.User)
+            .Include(a => a.Container)
+            .Include(a => a.Terminal)
+            .Include(a => a.Driver)
+            .Include(a => a.TruckCompany)
+            .ToQueryString(); // Logs the SQL query
+
+        Console.WriteLine(query);
+
         var appointments = await _context.Appointments
             .Include(a => a.User)
             .Include(a => a.Container)
@@ -30,12 +39,17 @@ public class AppointmentController : ControllerBase
         
         return Ok(appointments);
     }
+    catch (Exception ex)
+    {
+        // Log the exception or handle it appropriately
+        return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+    }
+}
 
-    [Authorize]
     [HttpGet("{id}")]
     public async Task<IActionResult> GetAppointment(int id)
     {
-        // Retrieve the appointment
+        // Retrieve a specific appointment by ID
         var appointment = await _context.Appointments
             .Include(a => a.User)
             .Include(a => a.Container)
@@ -49,16 +63,9 @@ public class AppointmentController : ControllerBase
             return NotFound();
         }
 
-        // Check if the user is authorized to access this appointment
-        if (User.IsInRole("Admin") || appointment.UserId == GetUserId())
-        {
-            return Ok(appointment);
-        }
-
-        return Forbid(); // User does not have permission
+        return Ok(appointment);
     }
 
-    
     [HttpPost]
     public async Task<IActionResult> CreateAppointment([FromBody] Appointment appointment)
     {
@@ -69,7 +76,6 @@ public class AppointmentController : ControllerBase
 
         // Set the creation and update timestamps
         appointment.CreatedAt = DateTime.UtcNow;
-        appointment.UpdatedAt = DateTime.UtcNow;
 
         _context.Appointments.Add(appointment);
         await _context.SaveChangesAsync();
@@ -77,7 +83,6 @@ public class AppointmentController : ControllerBase
         return CreatedAtAction(nameof(GetAppointment), new { id = appointment.AppointmentId }, appointment);
     }
 
-   
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateAppointment(int id, [FromBody] Appointment appointment)
     {
@@ -94,12 +99,22 @@ public class AppointmentController : ControllerBase
         }
 
         // Update the appointment details
+        existingAppointment.UserId = appointment.UserId;
+        existingAppointment.ContainerId = appointment.ContainerId;
+        existingAppointment.TerminalId = appointment.TerminalId;
+        existingAppointment.DriverId = appointment.DriverId;
+        existingAppointment.CompanyId = appointment.CompanyId;
         existingAppointment.StartDate = appointment.StartDate;
-        existingAppointment.EndDate = appointment.EndDate;
         existingAppointment.Status = appointment.Status;
         existingAppointment.TotalCost = appointment.TotalCost;
         existingAppointment.TicketNumber = appointment.TicketNumber;
-        existingAppointment.UpdatedAt = DateTime.UtcNow;
+        existingAppointment.MoveType = appointment.MoveType;
+        existingAppointment.GateCode = appointment.GateCode;
+        existingAppointment.AppointmentStatus = appointment.AppointmentStatus;
+        existingAppointment.GateStatus = appointment.GateStatus;
+        existingAppointment.Line = appointment.Line;
+        existingAppointment.CheckIn = appointment.CheckIn;
+        existingAppointment.TransportType = appointment.TransportType;
 
         _context.Entry(existingAppointment).State = EntityState.Modified;
         await _context.SaveChangesAsync();
@@ -107,7 +122,6 @@ public class AppointmentController : ControllerBase
         return NoContent();
     }
 
-    
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteAppointment(int id)
     {
@@ -121,12 +135,5 @@ public class AppointmentController : ControllerBase
         await _context.SaveChangesAsync();
 
         return NoContent();
-    }
-
-    private int GetUserId()
-    {
-        // Assuming you store the UserId in the claims, you might need to adjust this based on your authentication setup
-        var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == "UserId");
-        return int.Parse(userIdClaim?.Value ?? "0");
     }
 }

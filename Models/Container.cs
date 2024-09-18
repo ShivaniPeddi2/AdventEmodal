@@ -1,6 +1,7 @@
-// Models/Container.cs
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 public class Container
 {
@@ -27,5 +28,12 @@ public class Container
     public string Status { get; set; }
     
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-    public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+
+    [Required]
+    public int CompanyId { get; set; }
+
+    [ForeignKey("CompanyId")]
+
+    [JsonIgnore]
+    public TruckCompany? TruckCompany { get; set; }
 }

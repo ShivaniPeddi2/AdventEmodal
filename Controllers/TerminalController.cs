@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
@@ -14,16 +13,13 @@ public class TerminalController : ControllerBase
         _context = context;
     }
 
-    [Authorize]
     [HttpGet]
     public async Task<IActionResult> GetTerminals()
     {
-        // Allow all authenticated users to view terminals
         var terminals = await _context.Terminals.ToListAsync();
         return Ok(terminals);
     }
 
-    [Authorize]
     [HttpGet("{id}")]
     public async Task<IActionResult> GetTerminal(int id)
     {
@@ -32,11 +28,9 @@ public class TerminalController : ControllerBase
         {
             return NotFound();
         }
-
         return Ok(terminal);
     }
 
-    [Authorize(Roles = "Admin")]
     [HttpPost]
     public async Task<IActionResult> CreateTerminal([FromBody] Terminal terminal)
     {
@@ -51,7 +45,6 @@ public class TerminalController : ControllerBase
         return CreatedAtAction(nameof(GetTerminal), new { id = terminal.TerminalId }, terminal);
     }
 
-    [Authorize(Roles = "Admin")]
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateTerminal(int id, [FromBody] Terminal terminal)
     {
@@ -67,8 +60,11 @@ public class TerminalController : ControllerBase
         }
 
         existingTerminal.Address = terminal.Address;
-        existingTerminal.Latitude = terminal.Latitude;
-        existingTerminal.Longitude = terminal.Longitude;
+        existingTerminal.State = terminal.State;
+        existingTerminal.Pincode = terminal.Pincode;
+        existingTerminal.Country = terminal.Country;
+        existingTerminal.GateNo = terminal.GateNo;
+        existingTerminal.RegistrationDate = terminal.RegistrationDate;
 
         _context.Entry(existingTerminal).State = EntityState.Modified;
         await _context.SaveChangesAsync();
@@ -76,7 +72,6 @@ public class TerminalController : ControllerBase
         return NoContent();
     }
 
-    [Authorize(Roles = "Admin")]
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteTerminal(int id)
     {
