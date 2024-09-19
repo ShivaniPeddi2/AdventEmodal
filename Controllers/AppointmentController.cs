@@ -15,6 +15,7 @@ public class AppointmentController : ControllerBase
     }
 
     [HttpGet]
+   // [Authorize(Roles = "Admin")]
     public async Task<IActionResult> GetAppointments()
     {
         try

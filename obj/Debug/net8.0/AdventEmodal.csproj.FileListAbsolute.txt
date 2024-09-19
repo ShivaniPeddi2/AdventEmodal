@@ -416,3 +416,6 @@ C:\Users\ShivaniPeddi\Music\AdventEmodal\obj\Debug\net8.0\refint\AdventEmodal.dl
 C:\Users\ShivaniPeddi\Music\AdventEmodal\obj\Debug\net8.0\AdventEmodal.pdb
 C:\Users\ShivaniPeddi\Music\AdventEmodal\obj\Debug\net8.0\AdventEmodal.genruntimeconfig.cache
 C:\Users\ShivaniPeddi\Music\AdventEmodal\obj\Debug\net8.0\ref\AdventEmodal.dll
+C:\Users\ShivaniPeddi\Music\AdventEmodal\bin\Debug\net8.0\log4net.config
+C:\Users\ShivaniPeddi\Music\AdventEmodal\bin\Debug\net8.0\log4net.dll
+C:\Users\ShivaniPeddi\Music\AdventEmodal\bin\Debug\net8.0\Microsoft.Extensions.Logging.Log4Net.AspNetCore.dll
