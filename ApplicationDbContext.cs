@@ -29,7 +29,7 @@ public class ApplicationDbContext : DbContext
             }
         );
 
-        // Disable cascade delete to avoid multiple cascade paths / cycles
+        
         modelBuilder.Entity<Appointment>()
             .HasOne(a => a.TruckCompany)
             .WithMany(tc => tc.Appointments)
