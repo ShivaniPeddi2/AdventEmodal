@@ -3,6 +3,14 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using Microsoft.Extensions.Logging;
+using log4net;
+using log4net.Config;
+
+// Load log4net configuration
+var logRepository = LogManager.GetRepository(System.Reflection.Assembly.GetEntryAssembly());
+XmlConfigurator.Configure(logRepository, new FileInfo("log4net.config"));
+
  
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddScoped<IContainerService, ContainerService>();
@@ -18,7 +26,12 @@ builder.Services.AddScoped<IAppointmentService, AppointmentService>();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
  
-builder.Services.AddControllers();
+builder.Services.AddControllers(options=>
+{
+    options.Filters.Add<CustomExceptionFilter>();
+}
+
+);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
