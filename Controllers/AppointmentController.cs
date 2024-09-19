@@ -7,56 +7,32 @@ using System.Threading.Tasks;
 [ApiController]
 public class AppointmentController : ControllerBase
 {
-    private readonly ApplicationDbContext _context;
+    private readonly IAppointmentService _appointmentService;
 
-    public AppointmentController(ApplicationDbContext context)
+    public AppointmentController(IAppointmentService appointmentService)
     {
-        _context = context;
+        _appointmentService = appointmentService;
     }
 
     [HttpGet]
     public async Task<IActionResult> GetAppointments()
-{
-    try
     {
-        var query = _context.Appointments
-            .Include(a => a.User)
-            .Include(a => a.Container)
-            .Include(a => a.Terminal)
-            .Include(a => a.Driver)
-            .Include(a => a.TruckCompany)
-            .ToQueryString(); // Logs the SQL query
-
-        Console.WriteLine(query);
-
-        var appointments = await _context.Appointments
-            .Include(a => a.User)
-            .Include(a => a.Container)
-            .Include(a => a.Terminal)
-            .Include(a => a.Driver)
-            .Include(a => a.TruckCompany)
-            .ToListAsync();
-        
-        return Ok(appointments);
+        try
+        {
+            var appointments = await _appointmentService.GetAppointmentsAsync();
+            return Ok(appointments);
+        }
+        catch (Exception ex)
+        {
+            // Log the exception or handle it appropriately
+            return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+        }
     }
-    catch (Exception ex)
-    {
-        // Log the exception or handle it appropriately
-        return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-    }
-}
 
     [HttpGet("{id}")]
     public async Task<IActionResult> GetAppointment(int id)
     {
-        // Retrieve a specific appointment by ID
-        var appointment = await _context.Appointments
-            .Include(a => a.User)
-            .Include(a => a.Container)
-            .Include(a => a.Terminal)
-            .Include(a => a.Driver)
-            .Include(a => a.TruckCompany)
-            .FirstOrDefaultAsync(a => a.AppointmentId == id);
+        var appointment = await _appointmentService.GetAppointmentByIdAsync(id);
 
         if (appointment == null)
         {
@@ -74,13 +50,16 @@ public class AppointmentController : ControllerBase
             return BadRequest(ModelState);
         }
 
-        // Set the creation and update timestamps
-        appointment.CreatedAt = DateTime.UtcNow;
-
-        _context.Appointments.Add(appointment);
-        await _context.SaveChangesAsync();
-
-        return CreatedAtAction(nameof(GetAppointment), new { id = appointment.AppointmentId }, appointment);
+        try
+        {
+            var createdAppointment = await _appointmentService.CreateAppointmentAsync(appointment);
+            return CreatedAtAction(nameof(GetAppointment), new { id = createdAppointment.AppointmentId }, createdAppointment);
+        }
+        catch (Exception ex)
+        {
+            // Log the exception or handle it appropriately
+            return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+        }
     }
 
     [HttpPut("{id}")]
@@ -91,49 +70,30 @@ public class AppointmentController : ControllerBase
             return BadRequest();
         }
 
-        // Check if the appointment exists
-        var existingAppointment = await _context.Appointments.FindAsync(id);
-        if (existingAppointment == null)
+        try
         {
-            return NotFound();
+            var updatedAppointment = await _appointmentService.UpdateAppointmentAsync(appointment);
+            return NoContent();
         }
-
-        // Update the appointment details
-        existingAppointment.UserId = appointment.UserId;
-        existingAppointment.ContainerId = appointment.ContainerId;
-        existingAppointment.TerminalId = appointment.TerminalId;
-        existingAppointment.DriverId = appointment.DriverId;
-        existingAppointment.CompanyId = appointment.CompanyId;
-        existingAppointment.StartDate = appointment.StartDate;
-        existingAppointment.Status = appointment.Status;
-        existingAppointment.TotalCost = appointment.TotalCost;
-        existingAppointment.TicketNumber = appointment.TicketNumber;
-        existingAppointment.MoveType = appointment.MoveType;
-        existingAppointment.GateCode = appointment.GateCode;
-        existingAppointment.AppointmentStatus = appointment.AppointmentStatus;
-        existingAppointment.GateStatus = appointment.GateStatus;
-        existingAppointment.Line = appointment.Line;
-        existingAppointment.CheckIn = appointment.CheckIn;
-        existingAppointment.TransportType = appointment.TransportType;
-
-        _context.Entry(existingAppointment).State = EntityState.Modified;
-        await _context.SaveChangesAsync();
-
-        return NoContent();
+        catch (Exception ex)
+        {
+            // Log the exception or handle it appropriately
+            return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+        }
     }
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteAppointment(int id)
     {
-        var appointment = await _context.Appointments.FindAsync(id);
-        if (appointment == null)
+        try
         {
-            return NotFound();
+            await _appointmentService.DeleteAppointmentAsync(id);
+            return NoContent();
         }
-
-        _context.Appointments.Remove(appointment);
-        await _context.SaveChangesAsync();
-
-        return NoContent();
+        catch (Exception ex)
+        {
+            // Log the exception or handle it appropriately
+            return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+        }
     }
 }

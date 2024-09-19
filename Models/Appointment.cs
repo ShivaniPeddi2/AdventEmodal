@@ -8,15 +8,19 @@ public class Appointment
     public int AppointmentId { get; set; }
     
     public int? UserId { get; set; }
+    [JsonIgnore]
     public User? User { get; set; }
     
     public int? ContainerId { get; set; }
+    [JsonIgnore]
     public Container? Container { get; set; }
     
     public int? TerminalId { get; set; }
+    [JsonIgnore]
     public Terminal? Terminal { get; set; }
     
     public int? DriverId { get; set; }
+    [JsonIgnore]
     public Driver? Driver { get; set; }
     
     // Add this property
@@ -53,9 +57,11 @@ public class Appointment
     [StringLength(50)]
     public string GateStatus { get; set; }
     
-    [StringLength(50)]
-    public string Line { get; set; }
+    //[StringLength(50)]
+    //[JsonIgnore]
+    //public int Line { get; set; }
     
+    //[JsonIgnore]
     public DateTime? CheckIn { get; set; }
     
     [StringLength(50)]

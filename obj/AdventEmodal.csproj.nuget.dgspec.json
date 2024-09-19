@@ -1,24 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "D:\\AdventEmodal\\AdventEmodal.csproj": {}
+    "C:\\Users\\ShivaniPeddi\\Music\\AdventEmodal\\AdventEmodal.csproj": {}
   },
   "projects": {
-    "D:\\AdventEmodal\\AdventEmodal.csproj": {
+    "C:\\Users\\ShivaniPeddi\\Music\\AdventEmodal\\AdventEmodal.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\AdventEmodal\\AdventEmodal.csproj",
+        "projectUniqueName": "C:\\Users\\ShivaniPeddi\\Music\\AdventEmodal\\AdventEmodal.csproj",
         "projectName": "AdventEmodal",
-        "projectPath": "D:\\AdventEmodal\\AdventEmodal.csproj",
-        "packagesPath": "C:\\Users\\SrikanthTippasani\\.nuget\\packages\\",
-        "outputPath": "D:\\AdventEmodal\\obj\\",
+        "projectPath": "C:\\Users\\ShivaniPeddi\\Music\\AdventEmodal\\AdventEmodal.csproj",
+        "packagesPath": "C:\\Users\\ShivaniPeddi\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\ShivaniPeddi\\Music\\AdventEmodal\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\SrikanthTippasani\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Users\\ShivaniPeddi\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -61,6 +57,10 @@
             "Microsoft.AspNetCore.OpenApi": {
               "target": "Package",
               "version": "[8.0.7, )"
+            },
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[8.0.8, )"
             },
             "Microsoft.EntityFrameworkCore.Design": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
@@ -110,7 +110,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.303/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.400/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

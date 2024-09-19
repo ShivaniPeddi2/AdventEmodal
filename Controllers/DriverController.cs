@@ -1,39 +1,40 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 
 [Route("api/[controller]")]
 [ApiController]
 public class DriverController : ControllerBase
 {
-    private readonly ApplicationDbContext _context;
+    private readonly IDriverService _driverService;
 
-    public DriverController(ApplicationDbContext context)
+    public DriverController(IDriverService driverService)
     {
-        _context = context;
+        _driverService = driverService;
     }
 
     [HttpGet]
     public async Task<IActionResult> GetDrivers()
     {
-        var drivers = await _context.Drivers
-            .Include(d => d.TruckCompany)
-            .ToListAsync();
+        var drivers = await _driverService.GetDriversAsync();
         return Ok(drivers);
     }
 
     [HttpGet("{id}")]
     public async Task<IActionResult> GetDriver(int id)
     {
-        var driver = await _context.Drivers
-            .Include(d => d.TruckCompany)
-            .FirstOrDefaultAsync(d => d.DriverId == id);
-
-        if (driver == null)
+        try
+        {
+            var driver = await _driverService.GetDriverByIdAsync(id);
+            if (driver == null)
+            {
+                return NotFound();
+            }
+            return Ok(driver);
+        }
+        catch (KeyNotFoundException)
         {
             return NotFound();
         }
-        return Ok(driver);
     }
 
     [HttpPost]
@@ -44,55 +45,50 @@ public class DriverController : ControllerBase
             return BadRequest(ModelState);
         }
 
-        _context.Drivers.Add(driver);
-        await _context.SaveChangesAsync();
-
-        return CreatedAtAction(nameof(GetDriver), new { id = driver.DriverId }, driver);
+        var createdDriver = await _driverService.CreateDriverAsync(driver);
+        return CreatedAtAction(nameof(GetDriver), new { id = createdDriver.DriverId }, createdDriver);
     }
 
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateDriver(int id, [FromBody] Driver driver)
     {
-        if (id != driver.DriverId)
+        if (!ModelState.IsValid)
         {
-            return BadRequest();
+            return BadRequest(ModelState);
         }
 
-        var existingDriver = await _context.Drivers.FindAsync(id);
-        if (existingDriver == null)
+        try
+        {
+            await _driverService.UpdateDriverAsync(id, driver);
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (KeyNotFoundException)
         {
             return NotFound();
         }
-
-        existingDriver.Name = driver.Name;
-        existingDriver.LicenseNumber = driver.LicenseNumber;
-        existingDriver.PhoneNumber = driver.PhoneNumber;
-        existingDriver.TruckCompanyId = driver.TruckCompanyId;
-
-        _context.Entry(existingDriver).State = EntityState.Modified;
-        await _context.SaveChangesAsync();
+        // catch (DbUpdateException)
+        // {
+        //     return StatusCode(500, "An error occurred while updating the driver.");
+        // }
 
         return NoContent();
     }
 
     [HttpDelete("{id}")]
-public async Task<IActionResult> DeleteDriver(int id)
-{
-    // Log the ID to verify it's correct
-    Console.WriteLine($"Attempting to delete driver with ID: {id}");
-
-    var driver = await _context.Drivers.FindAsync(id);
-    if (driver == null)
+    public async Task<IActionResult> DeleteDriver(int id)
     {
-        // Log not found error
-        Console.WriteLine($"Driver with ID {id} not found.");
-        return NotFound();
+        try
+        {
+            await _driverService.DeleteDriverAsync(id);
+        }
+        catch (KeyNotFoundException)
+        {
+            return NotFound();
+        }
+
+        return NoContent();
     }
-
-    _context.Drivers.Remove(driver);
-    await _context.SaveChangesAsync();
-
-    return NoContent();
-}
-
 }

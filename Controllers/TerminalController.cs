@@ -1,34 +1,40 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 
 [Route("api/[controller]")]
 [ApiController]
 public class TerminalController : ControllerBase
 {
-    private readonly ApplicationDbContext _context;
+    private readonly ITerminalService _terminalService;
 
-    public TerminalController(ApplicationDbContext context)
+    public TerminalController(ITerminalService terminalService)
     {
-        _context = context;
+        _terminalService = terminalService;
     }
 
     [HttpGet]
     public async Task<IActionResult> GetTerminals()
     {
-        var terminals = await _context.Terminals.ToListAsync();
+        var terminals = await _terminalService.GetTerminalsAsync();
         return Ok(terminals);
     }
 
     [HttpGet("{id}")]
     public async Task<IActionResult> GetTerminal(int id)
     {
-        var terminal = await _context.Terminals.FindAsync(id);
-        if (terminal == null)
+        try
+        {
+            var terminal = await _terminalService.GetTerminalByIdAsync(id);
+            if (terminal == null)
+            {
+                return NotFound();
+            }
+            return Ok(terminal);
+        }
+        catch (KeyNotFoundException)
         {
             return NotFound();
         }
-        return Ok(terminal);
     }
 
     [HttpPost]
@@ -39,35 +45,34 @@ public class TerminalController : ControllerBase
             return BadRequest(ModelState);
         }
 
-        _context.Terminals.Add(terminal);
-        await _context.SaveChangesAsync();
-
-        return CreatedAtAction(nameof(GetTerminal), new { id = terminal.TerminalId }, terminal);
+        var createdTerminal = await _terminalService.CreateTerminalAsync(terminal);
+        return CreatedAtAction(nameof(GetTerminal), new { id = createdTerminal.TerminalId }, createdTerminal);
     }
 
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateTerminal(int id, [FromBody] Terminal terminal)
     {
-        if (id != terminal.TerminalId)
+        if (!ModelState.IsValid)
         {
-            return BadRequest();
+            return BadRequest(ModelState);
         }
 
-        var existingTerminal = await _context.Terminals.FindAsync(id);
-        if (existingTerminal == null)
+        try
+        {
+            await _terminalService.UpdateTerminalAsync(id, terminal);
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (KeyNotFoundException)
         {
             return NotFound();
         }
-
-        existingTerminal.Address = terminal.Address;
-        existingTerminal.State = terminal.State;
-        existingTerminal.Pincode = terminal.Pincode;
-        existingTerminal.Country = terminal.Country;
-        existingTerminal.GateNo = terminal.GateNo;
-        existingTerminal.RegistrationDate = terminal.RegistrationDate;
-
-        _context.Entry(existingTerminal).State = EntityState.Modified;
-        await _context.SaveChangesAsync();
+        // catch (DbUpdateException)
+        // {
+        //     return StatusCode(500, "An error occurred while updating the terminal.");
+        // }
 
         return NoContent();
     }
@@ -75,14 +80,14 @@ public class TerminalController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteTerminal(int id)
     {
-        var terminal = await _context.Terminals.FindAsync(id);
-        if (terminal == null)
+        try
+        {
+            await _terminalService.DeleteTerminalAsync(id);
+        }
+        catch (KeyNotFoundException)
         {
             return NotFound();
         }
-
-        _context.Terminals.Remove(terminal);
-        await _context.SaveChangesAsync();
 
         return NoContent();
     }

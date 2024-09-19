@@ -28,7 +28,7 @@ public class TruckCompany
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     // Add these properties
-    public ICollection<Driver> Drivers { get; set; }
+   public ICollection<Driver> Drivers { get; set; }
     public ICollection<Appointment> Appointments { get; set; }
     public ICollection<Container> Containers { get; set; }
 }

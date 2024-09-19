@@ -29,20 +29,50 @@ namespace AdventEmodal.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AppointmentId"));
 
+                    b.Property<string>("AppointmentStatus")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTime?>("CheckIn")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("CheckIn");
+
+                    b.Property<int?>("CompanyId")
+                        .HasColumnType("int");
+
                     b.Property<int?>("ContainerId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime2")
+                        .HasColumnName("CreatedAt");
 
                     b.Property<int?>("DriverId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("EndDate")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("GateCode")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("GateStatus")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<int>("Line")
+                        .HasMaxLength(50)
+                        .HasColumnType("int");
+
+                    b.Property<string>("MoveType")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<DateTime>("StartDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime2")
+                        .HasColumnName("StartDate");
 
                     b.Property<string>("Status")
                         .IsRequired()
@@ -60,24 +90,23 @@ namespace AdventEmodal.Migrations
                     b.Property<decimal>("TotalCost")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int?>("TruckCompanyId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("TransportType")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int?>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("AppointmentId");
 
+                    b.HasIndex("CompanyId");
+
                     b.HasIndex("ContainerId");
 
                     b.HasIndex("DriverId");
 
                     b.HasIndex("TerminalId");
-
-                    b.HasIndex("TruckCompanyId");
 
                     b.HasIndex("UserId");
 
@@ -100,6 +129,9 @@ namespace AdventEmodal.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<int>("CompanyId")
+                        .HasColumnType("int");
+
                     b.Property<string>("ContainerNumber")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -118,10 +150,9 @@ namespace AdventEmodal.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
                     b.HasKey("ContainerId");
+
+                    b.HasIndex("CompanyId");
 
                     b.ToTable("Containers");
                 });
@@ -155,9 +186,6 @@ namespace AdventEmodal.Migrations
                     b.Property<int?>("TruckCompanyId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
                     b.HasKey("DriverId");
 
                     b.HasIndex("TruckCompanyId");
@@ -178,17 +206,31 @@ namespace AdventEmodal.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
+                    b.Property<string>("Country")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<decimal?>("Latitude")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<string>("GateNo")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
-                    b.Property<decimal?>("Longitude")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<string>("Pincode")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
-                    b.Property<DateTime>("UpdatedAt")
+                    b.Property<DateTime>("RegistrationDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("State")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("TerminalId");
 
@@ -216,13 +258,23 @@ namespace AdventEmodal.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
-                    b.Property<DateTime>("UpdatedAt")
+                    b.Property<DateTime>("RegisteredDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("Website")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.HasKey("CompanyId");
 
@@ -269,32 +321,35 @@ namespace AdventEmodal.Migrations
                         new
                         {
                             UserId = 1,
-                            CreatedAt = new DateTime(2024, 9, 15, 15, 24, 10, 617, DateTimeKind.Utc).AddTicks(4203),
+                            CreatedAt = new DateTime(2024, 9, 18, 16, 51, 47, 681, DateTimeKind.Utc).AddTicks(1195),
                             Email = "admin@example.com",
                             IsAdmin = true,
                             Password = "admin_password",
-                            UpdatedAt = new DateTime(2024, 9, 15, 15, 24, 10, 617, DateTimeKind.Utc).AddTicks(4204),
+                            UpdatedAt = new DateTime(2024, 9, 18, 16, 51, 47, 681, DateTimeKind.Utc).AddTicks(1196),
                             Username = "admin"
                         });
                 });
 
             modelBuilder.Entity("Appointment", b =>
                 {
+                    b.HasOne("TruckCompany", "TruckCompany")
+                        .WithMany("Appointments")
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("Container", "Container")
                         .WithMany()
                         .HasForeignKey("ContainerId");
 
                     b.HasOne("Driver", "Driver")
-                        .WithMany()
-                        .HasForeignKey("DriverId");
+                        .WithMany("Appointments")
+                        .HasForeignKey("DriverId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("Terminal", "Terminal")
-                        .WithMany()
-                        .HasForeignKey("TerminalId");
-
-                    b.HasOne("TruckCompany", "TruckCompany")
-                        .WithMany()
-                        .HasForeignKey("TruckCompanyId");
+                        .WithMany("Appointments")
+                        .HasForeignKey("TerminalId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("User", "User")
                         .WithMany()
@@ -311,13 +366,44 @@ namespace AdventEmodal.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Container", b =>
+                {
+                    b.HasOne("TruckCompany", "TruckCompany")
+                        .WithMany("Containers")
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("TruckCompany");
+                });
+
             modelBuilder.Entity("Driver", b =>
                 {
                     b.HasOne("TruckCompany", "TruckCompany")
-                        .WithMany()
-                        .HasForeignKey("TruckCompanyId");
+                        .WithMany("Drivers")
+                        .HasForeignKey("TruckCompanyId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("TruckCompany");
+                });
+
+            modelBuilder.Entity("Driver", b =>
+                {
+                    b.Navigation("Appointments");
+                });
+
+            modelBuilder.Entity("Terminal", b =>
+                {
+                    b.Navigation("Appointments");
+                });
+
+            modelBuilder.Entity("TruckCompany", b =>
+                {
+                    b.Navigation("Appointments");
+
+                    b.Navigation("Containers");
+
+                    b.Navigation("Drivers");
                 });
 #pragma warning restore 612, 618
         }

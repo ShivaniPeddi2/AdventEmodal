@@ -5,7 +5,15 @@ using Microsoft.OpenApi.Models;
 using System.Text;
  
 var builder = WebApplication.CreateBuilder(args);
- 
+builder.Services.AddScoped<IContainerService, ContainerService>();
+builder.Services.AddScoped<IDriverService, DriverService>();
+builder.Services.AddScoped<ITerminalService, TerminalService>();
+builder.Services.AddScoped<ITruckCompanyService, TruckCompanyService>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IAppointmentService, AppointmentService>();
+
+
+
 // Add services to the container.
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
