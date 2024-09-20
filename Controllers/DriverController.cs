@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -13,32 +14,28 @@ public class DriverController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetDrivers()
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> GetDriversAsync()
     {
         var drivers = await _driverService.GetDriversAsync();
         return Ok(drivers);
     }
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetDriver(int id)
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> GetDriverByIdAsync(int id)
     {
-        try
-        {
-            var driver = await _driverService.GetDriverByIdAsync(id);
-            if (driver == null)
-            {
-                return NotFound();
-            }
-            return Ok(driver);
-        }
-        catch (KeyNotFoundException)
+        var driver = await _driverService.GetDriverByIdAsync(id);
+        if (driver == null)
         {
             return NotFound();
         }
+        return Ok(driver);
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateDriver([FromBody] Driver driver)
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> CreateDriverAsync([FromBody] Driver driver)
     {
         if (!ModelState.IsValid)
         {
@@ -46,11 +43,12 @@ public class DriverController : ControllerBase
         }
 
         var createdDriver = await _driverService.CreateDriverAsync(driver);
-        return CreatedAtAction(nameof(GetDriver), new { id = createdDriver.DriverId }, createdDriver);
+        return CreatedAtAction(nameof(GetDriverByIdAsync), new { id = createdDriver.DriverId }, createdDriver);
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateDriver(int id, [FromBody] Driver driver)
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> UpdateDriverAsync(int id, [FromBody] Driver driver)
     {
         if (!ModelState.IsValid)
         {
@@ -60,6 +58,7 @@ public class DriverController : ControllerBase
         try
         {
             await _driverService.UpdateDriverAsync(id, driver);
+            return NoContent();
         }
         catch (ArgumentException ex)
         {
@@ -73,22 +72,20 @@ public class DriverController : ControllerBase
         // {
         //     return StatusCode(500, "An error occurred while updating the driver.");
         // }
-
-        return NoContent();
     }
 
     [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteDriver(int id)
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> DeleteDriverAsync(int id)
     {
         try
         {
             await _driverService.DeleteDriverAsync(id);
+            return NoContent();
         }
         catch (KeyNotFoundException)
         {
             return NotFound();
         }
-
-        return NoContent();
     }
 }

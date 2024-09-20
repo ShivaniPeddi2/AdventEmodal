@@ -20,7 +20,7 @@ public class TruckCompanyService : ITruckCompanyService
             .ToListAsync();
     }
 
-    public async Task<TruckCompany> GetTruckCompanyByIdAsync(int id)
+    public async Task<TruckCompany?> GetTruckCompanyByIdAsync(int id)
     {
         return await _context.TruckCompanies
             .Include(c => c.Drivers)

@@ -12,20 +12,19 @@ public class Terminal
     public string Address { get; set; }
     
     [StringLength(100)]
-    public string State { get; set; }
+    public string? State { get; set; }
     
     [StringLength(20)]
-    public string Pincode { get; set; }
+    public string? Pincode { get; set; }
     
     [StringLength(100)]
-    public string Country { get; set; }
+    public string? Country { get; set; }
     
     [StringLength(50)]
-    public string GateNo { get; set; }
+    public string? GateNo { get; set; }
     
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime RegistrationDate { get; set; } = DateTime.UtcNow;
 
-    // Add this property
     public ICollection<Appointment>? Appointments { get; set; }
 }

@@ -29,7 +29,6 @@ public class ApplicationDbContext : DbContext
             }
         );
 
-        
         modelBuilder.Entity<Appointment>()
             .HasOne(a => a.TruckCompany)
             .WithMany(tc => tc.Appointments)
@@ -61,19 +60,18 @@ public class ApplicationDbContext : DbContext
             .OnDelete(DeleteBehavior.Restrict);  // Disable cascade delete
 
         modelBuilder.Entity<Appointment>()
-        .Property(a => a.StartDate)
-        .HasColumnName("StartDate")
-        .HasColumnType("datetime2");  // Ensure this matches your database schema
+            .Property(a => a.StartDate)
+            .HasColumnName("StartDate")
+            .HasColumnType("datetime2");  // Ensure this matches your database schema
     
-    modelBuilder.Entity<Appointment>()
-        .Property(a => a.CreatedAt)
-        .HasColumnName("CreatedAt")
-        .HasColumnType("datetime2");
+        modelBuilder.Entity<Appointment>()
+            .Property(a => a.CreatedAt)
+            .HasColumnName("CreatedAt")
+            .HasColumnType("datetime2");
     
-    modelBuilder.Entity<Appointment>()
-        .Property(a => a.CheckIn)
-        .HasColumnName("CheckIn")
-        .HasColumnType("datetime2");
-
+        modelBuilder.Entity<Appointment>()
+            .Property(a => a.CheckIn)
+            .HasColumnName("CheckIn")
+            .HasColumnType("datetime2");
     }
 }

@@ -17,15 +17,15 @@ public class Driver
     public string LicenseNumber { get; set; }
     
     [StringLength(20)]
-    public string PhoneNumber { get; set; }
+    public string? PhoneNumber { get; set; }
     
     public int? TruckCompanyId { get; set; }
+    
     [JsonIgnore]
     public TruckCompany? TruckCompany { get; set; }
     
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-    // Add this property
     [JsonIgnore]
     public ICollection<Appointment>? Appointments { get; set; }
 }

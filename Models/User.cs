@@ -12,7 +12,7 @@ public class User
 
     [Required]
     [StringLength(255)]
-    public string Password { get; set; } // Store plain text password
+    public string Password { get; set; } // Plaintext password
 
     [Required]
     [StringLength(255)]
@@ -21,5 +21,5 @@ public class User
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
-    public bool IsAdmin { get; set; } // New property for admin role
+    public bool IsAdmin { get; set; }
 }

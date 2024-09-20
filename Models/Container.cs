@@ -32,8 +32,7 @@ public class Container
     [Required]
     public int CompanyId { get; set; }
 
-    [ForeignKey("CompanyId")]
-
+    [ForeignKey(nameof(CompanyId))]
     [JsonIgnore]
     public TruckCompany? TruckCompany { get; set; }
 }

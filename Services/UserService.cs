@@ -54,7 +54,7 @@ public class UserService : IUserService
 
         if (!string.IsNullOrWhiteSpace(user.Password))
         {
-            existingUser.Password = user.Password; // Update plain text password
+            existingUser.Password = user.Password; // Update plaintext password
         }
 
         _context.Entry(existingUser).State = EntityState.Modified;

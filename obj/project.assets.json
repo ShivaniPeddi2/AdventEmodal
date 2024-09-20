@@ -4511,11 +4511,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\ShivaniPeddi\\Music\\AdventEmodal\\AdventEmodal.csproj",
+      "projectUniqueName": "C:\\Users\\ShivaniPeddi\\Videos\\AdventEmodal\\AdventEmodal.csproj",
       "projectName": "AdventEmodal",
-      "projectPath": "C:\\Users\\ShivaniPeddi\\Music\\AdventEmodal\\AdventEmodal.csproj",
+      "projectPath": "C:\\Users\\ShivaniPeddi\\Videos\\AdventEmodal\\AdventEmodal.csproj",
       "packagesPath": "C:\\Users\\ShivaniPeddi\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\ShivaniPeddi\\Music\\AdventEmodal\\obj\\",
+      "outputPath": "C:\\Users\\ShivaniPeddi\\Videos\\AdventEmodal\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\ShivaniPeddi\\AppData\\Roaming\\NuGet\\NuGet.Config",

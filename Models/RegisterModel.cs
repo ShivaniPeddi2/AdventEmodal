@@ -1,12 +1,15 @@
 using System.ComponentModel.DataAnnotations;
 
-public class LoginModel
+public class RegisterModel
 {
     [Required]
-    [StringLength(255)]
     public string Username { get; set; }
 
     [Required]
-    [StringLength(255)]
+    [MinLength(6)]
     public string Password { get; set; }
+
+    [Required]
+    [EmailAddress]
+    public string Email { get; set; }
 }

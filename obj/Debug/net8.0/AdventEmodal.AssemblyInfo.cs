@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("AdventEmodal")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+231d2f5453c81336f2a2671a5b3ef5b4aae79353")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+683595e0a9d392d8f78995bc0a0928e4d80d0a40")]
 [assembly: System.Reflection.AssemblyProductAttribute("AdventEmodal")]
 [assembly: System.Reflection.AssemblyTitleAttribute("AdventEmodal")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

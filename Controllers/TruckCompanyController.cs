@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -13,32 +14,28 @@ public class TruckCompanyController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetTruckCompanies()
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> GetTruckCompaniesAsync()
     {
         var companies = await _truckCompanyService.GetTruckCompaniesAsync();
         return Ok(companies);
     }
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetTruckCompany(int id)
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> GetTruckCompanyByIdAsync(int id)
     {
-        try
-        {
-            var company = await _truckCompanyService.GetTruckCompanyByIdAsync(id);
-            if (company == null)
-            {
-                return NotFound();
-            }
-            return Ok(company);
-        }
-        catch (KeyNotFoundException)
+        var company = await _truckCompanyService.GetTruckCompanyByIdAsync(id);
+        if (company == null)
         {
             return NotFound();
         }
+        return Ok(company);
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateTruckCompany([FromBody] TruckCompany company)
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> CreateTruckCompanyAsync([FromBody] TruckCompany company)
     {
         if (!ModelState.IsValid)
         {
@@ -46,11 +43,12 @@ public class TruckCompanyController : ControllerBase
         }
 
         var createdCompany = await _truckCompanyService.CreateTruckCompanyAsync(company);
-        return CreatedAtAction(nameof(GetTruckCompany), new { id = createdCompany.CompanyId }, createdCompany);
+        return CreatedAtAction(nameof(GetTruckCompanyByIdAsync), new { id = createdCompany.CompanyId }, createdCompany);
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateTruckCompany(int id, [FromBody] TruckCompany company)
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> UpdateTruckCompanyAsync(int id, [FromBody] TruckCompany company)
     {
         if (!ModelState.IsValid)
         {
@@ -60,6 +58,7 @@ public class TruckCompanyController : ControllerBase
         try
         {
             await _truckCompanyService.UpdateTruckCompanyAsync(id, company);
+            return NoContent();
         }
         catch (ArgumentException ex)
         {
@@ -73,22 +72,20 @@ public class TruckCompanyController : ControllerBase
         // {
         //     return StatusCode(500, "An error occurred while updating the truck company.");
         // }
-
-        return NoContent();
     }
 
     [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteTruckCompany(int id)
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> DeleteTruckCompanyAsync(int id)
     {
         try
         {
             await _truckCompanyService.DeleteTruckCompanyAsync(id);
+            return NoContent();
         }
         catch (KeyNotFoundException)
         {
             return NotFound();
         }
-
-        return NoContent();
     }
 }

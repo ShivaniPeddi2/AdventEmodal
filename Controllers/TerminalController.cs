@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -13,32 +14,28 @@ public class TerminalController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetTerminals()
+    [Authorize(Roles = "Admin,User")]
+    public async Task<IActionResult> GetTerminalsAsync()
     {
         var terminals = await _terminalService.GetTerminalsAsync();
         return Ok(terminals);
     }
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetTerminal(int id)
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> GetTerminalByIdAsync(int id)
     {
-        try
-        {
-            var terminal = await _terminalService.GetTerminalByIdAsync(id);
-            if (terminal == null)
-            {
-                return NotFound();
-            }
-            return Ok(terminal);
-        }
-        catch (KeyNotFoundException)
+        var terminal = await _terminalService.GetTerminalByIdAsync(id);
+        if (terminal == null)
         {
             return NotFound();
         }
+        return Ok(terminal);
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateTerminal([FromBody] Terminal terminal)
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> CreateTerminalAsync([FromBody] Terminal terminal)
     {
         if (!ModelState.IsValid)
         {
@@ -46,11 +43,12 @@ public class TerminalController : ControllerBase
         }
 
         var createdTerminal = await _terminalService.CreateTerminalAsync(terminal);
-        return CreatedAtAction(nameof(GetTerminal), new { id = createdTerminal.TerminalId }, createdTerminal);
+        return CreatedAtAction(nameof(GetTerminalByIdAsync), new { id = createdTerminal.TerminalId }, createdTerminal);
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateTerminal(int id, [FromBody] Terminal terminal)
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> UpdateTerminalAsync(int id, [FromBody] Terminal terminal)
     {
         if (!ModelState.IsValid)
         {
@@ -60,6 +58,7 @@ public class TerminalController : ControllerBase
         try
         {
             await _terminalService.UpdateTerminalAsync(id, terminal);
+            return NoContent();
         }
         catch (ArgumentException ex)
         {
@@ -73,22 +72,20 @@ public class TerminalController : ControllerBase
         // {
         //     return StatusCode(500, "An error occurred while updating the terminal.");
         // }
-
-        return NoContent();
     }
 
     [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteTerminal(int id)
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> DeleteTerminalAsync(int id)
     {
         try
         {
             await _terminalService.DeleteTerminalAsync(id);
+            return NoContent();
         }
         catch (KeyNotFoundException)
         {
             return NotFound();
         }
-
-        return NoContent();
     }
 }
