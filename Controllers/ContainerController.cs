@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -43,6 +42,7 @@ public class ContainerController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> CreateContainer([FromBody] Container container)
     {
         if (!ModelState.IsValid)
@@ -55,6 +55,7 @@ public class ContainerController : ControllerBase
     }
 
     [HttpPut("{id}")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> UpdateContainer(int id, [FromBody] Container container)
     {
         if (!ModelState.IsValid)
@@ -74,15 +75,12 @@ public class ContainerController : ControllerBase
         {
             return NotFound();
         }
-        // catch (DbUpdateException)
-        // {
-        //     return StatusCode(500, "An error occurred while updating the container.");
-        // }
 
         return NoContent();
     }
 
     [HttpDelete("{id}")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> DeleteContainer(int id)
     {
         try

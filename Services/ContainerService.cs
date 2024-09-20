@@ -16,7 +16,7 @@ public class ContainerService : IContainerService
         return await _context.Containers.ToListAsync();
     }
 
-    public async Task<Container> GetContainerByIdAsync(int id)
+    public async Task<Container?> GetContainerByIdAsync(int id)
     {
         return await _context.Containers.FindAsync(id);
     }

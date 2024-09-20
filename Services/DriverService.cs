@@ -18,7 +18,7 @@ public class DriverService : IDriverService
             .ToListAsync();
     }
 
-    public async Task<Driver> GetDriverByIdAsync(int id)
+    public async Task<Driver?> GetDriverByIdAsync(int id)
     {
         return await _context.Drivers
             .Include(d => d.TruckCompany)

@@ -23,7 +23,6 @@ public class Appointment
     [JsonIgnore]
     public Driver? Driver { get; set; }
     
-    // Add this property
     public int? CompanyId { get; set; }
     [JsonIgnore]
     public TruckCompany? TruckCompany { get; set; }
@@ -57,11 +56,6 @@ public class Appointment
     [StringLength(50)]
     public string GateStatus { get; set; }
     
-    //[StringLength(50)]
-    //[JsonIgnore]
-    //public int Line { get; set; }
-    
-    //[JsonIgnore]
     public DateTime? CheckIn { get; set; }
     
     [StringLength(50)]

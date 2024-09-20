@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 public class TruckCompany
 {
@@ -12,23 +13,26 @@ public class TruckCompany
     public string Name { get; set; }
     
     [StringLength(255)]
-    public string Address { get; set; }
+    public string? Address { get; set; }
     
     [StringLength(20)]
-    public string ContactNumber { get; set; }
+    public string? ContactNumber { get; set; }
     
     public DateTime RegisteredDate { get; set; } = DateTime.UtcNow;
     
     [StringLength(255)]
-    public string Email { get; set; }
+    public string? Email { get; set; }
     
     [StringLength(255)]
-    public string Website { get; set; }
+    public string? Website { get; set; }
     
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-    // Add these properties
-   public ICollection<Driver> Drivers { get; set; }
-    public ICollection<Appointment> Appointments { get; set; }
-    public ICollection<Container> Containers { get; set; }
+    [JsonIgnore]
+    
+    public ICollection<Driver>? Drivers { get; set; }
+    [JsonIgnore]
+    public ICollection<Appointment>? Appointments { get; set; }
+    [JsonIgnore]
+    public ICollection<Container>? Containers { get; set; }
 }

@@ -16,7 +16,7 @@ public class TerminalService : ITerminalService
         return await _context.Terminals.ToListAsync();
     }
 
-    public async Task<Terminal> GetTerminalByIdAsync(int id)
+    public async Task<Terminal?> GetTerminalByIdAsync(int id)
     {
         return await _context.Terminals.FindAsync(id);
     }

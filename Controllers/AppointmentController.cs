@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using System;
 using System.Threading.Tasks;
 
 [Route("api/[controller]")]
@@ -15,7 +15,7 @@ public class AppointmentController : ControllerBase
     }
 
     [HttpGet]
-   // [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin,User")]
     public async Task<IActionResult> GetAppointments()
     {
         try
@@ -31,6 +31,7 @@ public class AppointmentController : ControllerBase
     }
 
     [HttpGet("{id}")]
+    [Authorize(Roles = "Admin,User")]
     public async Task<IActionResult> GetAppointment(int id)
     {
         var appointment = await _appointmentService.GetAppointmentByIdAsync(id);
@@ -44,6 +45,7 @@ public class AppointmentController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = "User,Admin")]
     public async Task<IActionResult> CreateAppointment([FromBody] Appointment appointment)
     {
         if (!ModelState.IsValid)
@@ -64,6 +66,7 @@ public class AppointmentController : ControllerBase
     }
 
     [HttpPut("{id}")]
+    [Authorize(Roles = "Admin,User")]
     public async Task<IActionResult> UpdateAppointment(int id, [FromBody] Appointment appointment)
     {
         if (id != appointment.AppointmentId)
@@ -84,6 +87,7 @@ public class AppointmentController : ControllerBase
     }
 
     [HttpDelete("{id}")]
+    [Authorize(Roles = "Admin,User")]
     public async Task<IActionResult> DeleteAppointment(int id)
     {
         try
@@ -98,4 +102,3 @@ public class AppointmentController : ControllerBase
         }
     }
 }
-
